@@ -13,3 +13,19 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model GenerateRoom {
+  id String @id @default(cuid())
+  updateImage String
+  outputImage String
+  roomStyle String?
+  aiStyle String?
+  prompt String
+  favourites String[] @default([])
+
+  userId String
+  userName String
+  userImage String?
+
+  createdAt DateTime @default(now())
+}
