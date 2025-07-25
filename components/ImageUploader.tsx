@@ -5,11 +5,13 @@ import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Button } from "./ui/button";
 import { ImagePlus, Loader, Trash } from "lucide-react";
+import { toast } from "sonner";
+import CircularProgressBar from "./ProgressStatus";
 
 interface ImageUploaderProps {
   disable?: boolean;
   onChange: (value: string) => void;
-  onRemove: (value: string) => void;
+  onRemove: (value: string) => Promise<void>;
   value: string | null;
   location: string;
 }
@@ -21,10 +23,10 @@ const ImageUploader = ({
   value,
   location,
 }: ImageUploaderProps) => {
-  const [isMounted, setIsMounted] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [onDeleting, setOnDeleting] = useState<boolean>(false);
-  const [progress, setProgress] = useState<number>(0);
+  const [isMounted, setIsMounted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [onDeleting, setOnDeleting] = useState(false);
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -32,50 +34,103 @@ const ImageUploader = ({
 
   const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
-  
     const file = acceptedFiles[0];
-      onUpload(file);
+    onUpload(file);
   };
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
       onDrop,
-      accept: {
-        "image/*": [],
-      },
+      accept: { "image/*": [] },
       multiple: false,
       disabled: disable,
     });
 
-  const onDelete = () => {
+
+  const onDelete = async () => {
+    if (!value) return;
     setOnDeleting(true);
-    onRemove(value!);
-    setOnDeleting(false);
+    try {
+      console.log("value", value);
+
+      const key = value.split("/").pop();
+
+      const res = await fetch(`/api/s3-remove?key=${key}`, {
+        method: "DELETE",
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Failed to delete image");
+      }
+
+      toast.success("Image deleted from S3");
+      onChange(""); // Clear image
+    } catch (error) {
+      toast.error("Failed to delete image");
+      console.error("S3 delete error:", error);
+    } finally {
+      setOnDeleting(false);
+    }
   };
-   const onUpload = (file : File) => {
-            console.log(file);
-            
-   }
- 
+
+  const onUpload = (file: File) => {
+    try {
+      setLoading(true);
+      
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          setLoading(false);
+          if (xhr.status === 200) {
+            const res = JSON.parse(xhr.responseText);
+            if (res.success) {
+              toast.success("Image uploaded successfully on S3");
+              onChange(res.url);
+            } else {
+              toast.error("Upload failed");
+              console.error("Upload failed:", res.error);
+            }
+          } else {
+            toast.error("Upload error");
+            console.error("Upload error", xhr.responseText);
+          }
+        }
+      };
+
+      xhr.open("POST", "/api/s3-upload");
+      xhr.send(formData);
+    } catch (err) {
+      toast.error("Something went wrong during upload");
+      console.error("Upload exception", err);
+      setLoading(false);
+    }
+  };
 
   if (!isMounted) return null;
 
   return (
-    <div className="w-full h-64">
+    <div className="w-full  aspect-video border border-input rounded-md">
       {value ? (
-        <div className="w-full flex-1/2 h-full relative rounded-md border border-input overflow-hidden bg-muted dark:bg-muted/50">
+        <div className="w-full h-full relative rounded-md border border-input overflow-hidden bg-muted dark:bg-muted/50">
           <Image
             fill
-            className="object-cover"
+            className="object-cover object-center"
             alt="Uploaded image"
             src={value}
             priority
           />
-          <div className="absolute top-2 right-2 cursor-pointer">
+          <div className="absolute top-2 right-2">
             <Button
               size="icon"
               variant="destructive"
-              className="cursor-pointer"
+              className="cursor-pointer "
               onClick={onDelete}
             >
               {onDeleting ? <Loader className="animate-spin" /> : <Trash />}
@@ -96,7 +151,8 @@ const ImageUploader = ({
         >
           <input {...getInputProps()} disabled={disable} />
           {loading ? (
-            <div className="flex flex-col gap-2">Progress: {progress}%</div>
+            
+              <CircularProgressBar />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-muted-foreground gap-2">
               <ImagePlus className="w-10 h-10" />

@@ -5,7 +5,7 @@ import ImageUploader from "@/components/ImageUploader";
 import ToolTipButton from "@/components/ToolTipButton";
 import { Textarea } from "@/components/ui/textarea";
 import { roomStyles, aiStyle } from "@/lib/helper";
-import { FilterX, RefreshCcw, SaveAllIcon } from "lucide-react";
+import { FilterX, Loader, RefreshCcw, SaveAllIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 
 interface clientProps {
@@ -23,7 +23,7 @@ const Client = ({ user }: clientProps) => {
   const [prompt, setPrompt] = useState<string>("");
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [uploadImage, setUploadImage] = useState<string | null>(null);
-  const [output, setOutput] = useState<string | null>(null);
+  const [outputImage, setOutputImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleRoomChange = (value: string) => {
@@ -103,6 +103,20 @@ const Client = ({ user }: clientProps) => {
           onRemove={handleRemoveImage}
           value={uploadImage}
         />
+        <div className="w-full aspect-video relative rounded-md border border-input bg-muted  dark:bg-muted/50">
+        
+        {loading && !outputImage &&  (
+          <div className="w-full h-full  flex flex-col gap-2 items-center justify-center">
+            <div className="flex items-center justify-center gap-1 ">
+              <Loader  className="w-6 h-6 animate-spin text-purple-600"/>
+              <span className="ml-1 text-lg animate-pulse">Generating...</span>
+            </div>
+            <div className="px-8 text-gray-400">
+            <span className="text-sm ">Please wait a moment. We&apos;re using free AI models, so it might take a little time. Don&apos;t close this tab.</span>
+            </div>
+          </div>
+        ) }
+        </div> 
       </div>
     </div>
   );
