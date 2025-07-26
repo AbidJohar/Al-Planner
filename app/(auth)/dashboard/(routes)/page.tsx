@@ -1,3 +1,4 @@
+
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import CustumBreadCrump from "@/components/CustumBreadCrump";
@@ -6,7 +7,7 @@ import Client from "../(component)/Client";
 
 const  DashboardPage = async () => {
 
-  const userId = await auth();
+  const {userId} = await auth();
 
   if(!userId)  redirect('/sign-in');
 

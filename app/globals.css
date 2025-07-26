@@ -120,3 +120,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+.before-after-slider {
+  height: 100%;
+}
+.before-after-slider img {
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.before-after-slider__first-photo-container,
+.before-after-slider__second-photo-container{
+  height: 100%;
+}
