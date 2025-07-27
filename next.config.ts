@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname : "ai-planner-designer.s3.us-east-1.amazonaws.com"
-      }
+      },
+      {hostname: "img.clerk.com"}
     ]
   }
 };

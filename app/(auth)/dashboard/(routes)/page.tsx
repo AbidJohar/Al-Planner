@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import CustumBreadCrump from "@/components/CustumBreadCrump";
 import Container from "@/components/Container";
 import Client from "../(component)/Client";
+import { fetchAllDesignById } from "@/actions/get-all-generatedDesigns-byuserId";
+import Designs from "@/components/Designs";
 
 const  DashboardPage = async () => {
 
@@ -21,11 +23,15 @@ const  DashboardPage = async () => {
     imageUrl : user.imageUrl
    }
 
+   //__________( fetch all data)___________
+   const designs = await fetchAllDesignById(user.id)
+ 
   return (
       <Container className="p-4  ">
         <CustumBreadCrump breadCrumbPage="Overview" breadCrumbitems={[{label : "Dashboard", link: "/dashboard"}]} />
 
         <Client user={loggedInUser} />
+        <Designs designs={designs} userId = {userId} />
      </Container>
   )
 }
