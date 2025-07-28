@@ -27,7 +27,7 @@ interface designsProps {
 
 export default function Designs({
   designs,
-  isDesigingPage = false,
+  isDesigingPage,
   userId,
 }: designsProps) {
       

@@ -31,7 +31,7 @@ const  DashboardPage = async () => {
         <CustumBreadCrump breadCrumbPage="Overview" breadCrumbitems={[{label : "Dashboard", link: "/dashboard"}]} />
 
         <Client user={loggedInUser} />
-        <Designs designs={designs} userId = {userId} />
+        <Designs isDesigingPage={false} designs={designs} userId = {userId} />
      </Container>
   )
 }
