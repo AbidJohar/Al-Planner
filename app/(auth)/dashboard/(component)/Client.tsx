@@ -148,31 +148,6 @@ const Client = ({ user }: clientProps) => {
     setUploadImage(null);
   };
 
-  //____________( progess bar setup )__________
-  // useEffect(() => {
-  //   let interval: ReturnType<typeof setInterval> | null = null;
-  //   let timeout: ReturnType<typeof setTimeout> | null = null;
-
-  //   if (loading) {
-  //     setProgress(0);
-  //     interval = setInterval(() => {
-  //       setProgress((p) => (p < 97 ? p + 3 : 97));
-  //     }, 800);
-  //   } else {
-  //     // push to 100% only if we were actually progressing
-  //     if (progress < 100) setProgress(100);
-  //     // small delay to let the user see 100% (optional)
-  //     timeout = setTimeout(() => {
-  //       setProgress(0);
-  //     }, 800);
-  //   }
-
-  //   return () => {
-  //     if (interval) clearInterval(interval);
-  //     if (timeout) clearTimeout(timeout);
-  //   };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [loading]);
 
   return (
     <div className="my-10 w-full p-4 rounded-md border border-input">

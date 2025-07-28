@@ -4,7 +4,7 @@ import Container from "@/components/Container";
 import Designs from "@/components/Designs";
 import { auth } from "@clerk/nextjs/server";
 import { Skeleton } from "@/components/ui/skeleton";
-import FilterControll from "./_components/filter-control";
+import FilterControl from "./_components/filter-control";
 
 interface designPageProps {
   searchParams?: Promise<{
@@ -57,7 +57,7 @@ export default async function DesignPage({ searchParams }: designPageProps) {
   return (
     <section>
       <Container className="p-4 md:p-8 space-y-8">
-        <FilterControll/>
+        <FilterControl/>
         <Suspense key={popularity} fallback={<DesignSkeleton />}>
           <DesignWrapper popularity={popularity} date={date} userId={userId} />
         </Suspense>

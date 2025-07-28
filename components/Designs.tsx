@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import ReactBeforeSliderComponent from "react-before-after-slider-component";
+import Image from "next/image";
 import {
   HoverCard,
   HoverCardContent,
@@ -37,9 +37,9 @@ export default function Designs({
 
   return (
     <Container className=" min-m">
-      {!isDesigingPage && <div>Design page</div>}
+      {/* {!isDesigingPage && <div>Design page</div>} */}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {designs.map((design) => (
           <DesignCard key={design.id} design={design} userId={userId} />
         ))}
@@ -106,19 +106,19 @@ const DesignCard = ({
       <div className="flex items-center justify-center">
         <HoverCard openDelay={0} closeDelay={100}>
           <HoverCardTrigger asChild>
-            <span className="text-sm max-w-full overflow-hidden block text-muted-foreground truncate whitespace-nowrap ">
+            <span className="text-sm w-full items-start  overflow-hidden block text-muted-foreground truncate whitespace-nowrap ">
               {design?.prompt}
             </span>
           </HoverCardTrigger>
-          <HoverCardContent className="w-[15rem] text-sm">
+          <HoverCardContent className="w-[15rem]  text-sm">
             {design?.prompt}
           </HoverCardContent>
         </HoverCard>
       </div>
 
-      <div className="flex items-center justify-between gap-1 p-1 sm:gap-2 sm:p-2">
+      <div className="flex items-center justify-between gap-2 p-1 sm:gap-2 sm:p-2">
   {design?.userImage && (
-    <div className="flex items-center gap-1 sm:gap-2 min-w-0 flex-1">
+    <div className="flex items-center gap-2 sm:gap-2 min-w-0 flex-1">
       <Image
         src={design.userImage}
         width={24}
