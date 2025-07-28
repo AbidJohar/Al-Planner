@@ -13,14 +13,14 @@ interface HeaderProps {
 
 const Header = ({ isAuthenticated }: HeaderProps) => {
   return (
-    <header className="p-4 min-md:px-6 min-md:py-4  sticky top-2 z-10 backdrop-blur min-md:backdrop-blur-none">
+    <header className="p-5 min-md:px-6 md:py-5  sticky top-2 z-10 backdrop-blur min-md:backdrop-blur-none">
       <Container>
-        <div className="min-md:border-white/15 rounded-full p-2.5 flex items-center max-w-4xl mx-auto min-md:backdrop-blur-md justify-between border border-transparent">
+        <div className="min-md:border-white/15 rounded-full px-4 py-3 flex items-center max-w-4xl mx-auto min-md:backdrop-blur-3xl justify-between border border-transparent">
 
-          {/* Logo */}
-          <div className="font-bold text-lg bg-gradient-to-r from-pink-600 to-blue-600 bg-clip-text text-transparent">
-            AI Interior Planner
-          </div>
+         {/* Logo */}
+<div className="font-bold text-lg bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 bg-clip-text text-transparent">
+  AI Interior Designer
+</div>
 
           {/* Nav Menu */}
           <div className="hidden min-md:block">
