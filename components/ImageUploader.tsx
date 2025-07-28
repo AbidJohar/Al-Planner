@@ -11,7 +11,7 @@ import CircularProgressBar from "./ProgressStatus";
 interface ImageUploaderProps {
   disable?: boolean;
   onChange: (value: string) => void;
-  onRemove: (value: string) => Promise<void>;
+  onRemove: (value: string) => void;
   value: string | null;
   location: string;
 }
