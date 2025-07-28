@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 export const fetchAllDesignById = async (
   userId?: string | null,
   popularity?: "popular_asc" | "popular_desc",
-  date?: "date_asc " | "date_desc"
+  date?: "date_asc" | "date_desc"
 ) => {
   try {
     let designs = await db.generateRoom.findMany({
@@ -23,7 +23,7 @@ export const fetchAllDesignById = async (
       );
     }
     //_______( Sort date )_____
-    if (date === "date_asc ") {
+    if (date === "date_asc") {
       designs = designs.sort(
         (a, b) =>
           new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
