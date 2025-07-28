@@ -1,6 +1,6 @@
- "use client"
+"use client"
 
- import {
+import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -9,8 +9,9 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { Button } from "./ui/button";
 import { Loader } from "lucide-react";
 
-type ButtonVariant = "default" | "outline" | "ghost" | "destructive" | "link" | "secondry" | null | undefined;
-type ButtonSize = "default" |  "sm" | "md" | "icon";
+type ButtonVariant = "default" | "outline" | "ghost" | "destructive" | "link" | "secondary" | null | undefined;
+// Fixed: Removed "md" and added "lg" to match Button component's actual sizes
+type ButtonSize = "default" | "sm" | "lg" | "icon" | null | undefined;
 
 interface tooltipButtonProps {
      content : string,
@@ -32,7 +33,7 @@ const ToolTipButton = ( {
     onClick,
     label,
     buttonVariant = "ghost",
-    buttonSize ="icon",
+    buttonSize = "icon",
     buttonClassName = "",
     delay = 0,
     disable = false,
@@ -44,11 +45,11 @@ const ToolTipButton = ( {
   <TooltipTrigger asChild className={`${disable ? "cursor-not-allowed" : "cursor-pointer"}`}>
     <Button 
     aria-label={label || content}
-     size = {buttonSize}
-     variant = {buttonVariant}
-     disabled = {disable}
-     className= {buttonClassName}
-     onClick= {onClick}
+     size={buttonSize}
+     variant={buttonVariant}
+     disabled={disable}
+     className={buttonClassName}
+     onClick={onClick}
     >
     { loading ? <Loader className="min-w-4 min-h-4 animate-spin" /> : <>
      {icon}
