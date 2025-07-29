@@ -7,7 +7,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { GenerateRoom } from "@/lib/generated/prisma";
+import {GenerateRoom} from '@prisma/client';
 import Container from "@/components/Container";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
