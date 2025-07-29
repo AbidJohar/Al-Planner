@@ -8,6 +8,11 @@ export const fetchAllDesignById = async (
   date?: "date_asc" | "date_desc"
 ) => {
   try {
+    console.log("=== DEBUG START ===");
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+    console.log("Has DATABASE_URL:", !!process.env.DATABASE_URL);
+    console.log("DATABASE_URL preview:", process.env.DATABASE_URL?.substring(0, 50) + "...");
+    console.log("UserId filter:", userId);
     let designs = await db.generateRoom.findMany({
       where: userId ? { userId } : undefined,
     });
@@ -36,6 +41,9 @@ export const fetchAllDesignById = async (
     }
     return designs;
   } catch (error) {
+    console.error("=== FULL ERROR DETAILS ===");
+    console.error("Full error:", error);
+    console.error("=== END ERROR DETAILS ===");
     console.error("Error in FetchAllDesignByid:", error);
     return [];
   }
