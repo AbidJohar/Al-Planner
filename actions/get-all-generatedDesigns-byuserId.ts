@@ -41,9 +41,7 @@ export const fetchAllDesignById = async (
     }
     return designs;
   } catch (error) {
-    console.error("=== FULL ERROR DETAILS ===");
-    console.error("Full error:", error);
-    console.error("=== END ERROR DETAILS ===");
+    
     console.error("Error in FetchAllDesignByid:", error);
     return [];
   }
