@@ -179,12 +179,14 @@ const Client = ({ user }: clientProps) => {
             <ToolTipButton
               content="clear all filter"
               onClick={clearAllfilter}
+              disable={loading}
               icon={<FilterX className="min-w-4 min-h-4" />}
             />
             <ToolTipButton
               content="save the result"
               onClick={saveAllResult}
-              loading = {loading}
+              disable={loading}
+              loading = {isSaving}
               icon={<SaveAllIcon className="min-w-4 min-h-4" />}
             />
           </div>
@@ -207,12 +209,13 @@ const Client = ({ user }: clientProps) => {
           onChange={handleChangeImage}
           onRemove={handleRemoveImage}
           value={uploadImage}
+          disable={loading}
         />
         <div className="w-full  aspect-video relative rounded-md border border-input bg-muted  dark:bg-muted/50">
           {loading && !outputImage && (
             <div className="w-full h-full  flex flex-col gap-2 items-center justify-center">
               <div className="flex items-center justify-center gap-1 ">
-                <Loader className="w-5 h-5 animate-spin text-purple-600" />
+                <Loader className="w-5 h-5 animate-spin text-orange-500" />
                 <span className="text-sm mt-1 block text-center animate-pulse font-medium">
                   Generating...
                 </span>

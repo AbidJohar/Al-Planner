@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../lib/generated/prisma"
+  // Remove the custom output line
 }
 
 datasource db {
@@ -22,10 +22,10 @@ model GenerateRoom {
   aiStyle String?
   prompt String
   favourites String[] @default([])
-
+  
   userId String
   userName String
   userImage String?
-
+  
   createdAt DateTime @default(now())
 }

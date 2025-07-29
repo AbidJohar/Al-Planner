@@ -132,6 +132,7 @@ const ImageUploader = ({
               variant="destructive"
               className="cursor-pointer "
               onClick={onDelete}
+              disabled={disable}
             >
               {onDeleting ? <Loader className="animate-spin" /> : <Trash />}
             </Button>

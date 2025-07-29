@@ -7,7 +7,7 @@ interface CircularProgressBarProps {
 }
 
 const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
-  duration = 5000,
+  duration = 7000,
 }) => {
   const [progress, setProgress] = useState(0);
 
