@@ -95,7 +95,7 @@ const Client = ({ user }: clientProps) => {
         uploadImage,
         outputImage,
         prompt,
-        roomStyles: room ?? "default",
+        roomStyle: room ?? "default",
         aiStyle: aistyle ?? "default",
         userName: user.fullName ?? "Unknow User",
         userImage: user.imageUrl ?? "assets/img/avatar.jpg",
