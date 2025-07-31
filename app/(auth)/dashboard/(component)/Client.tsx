@@ -129,7 +129,7 @@ const Client = ({ user }: clientProps) => {
         imageUrl: uploadImage,
         prompt: `${prompt} ${room ? `Room Style: ${room}` : ""} ${
           aistyle ? `AI style: ${aistyle}` : ""
-        }.Make sure the image is high quality (1080px) and make sure the ratio is 16:9 and visually appealing. }`,
+        }.Make sure the image is high quality (720px) and make sure the ratio is 16:9 and visually appealing. }`,
       });
 
       setOutputImage(result);
