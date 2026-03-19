@@ -6,12 +6,12 @@ import ReactBeforeSliderComponent from "react-before-after-slider-component";
 import "react-before-after-slider-component/dist/build.css";
 import ToolTipButton from "@/components/ToolTipButton";
 import { Textarea } from "@/components/ui/textarea";
-import { roomStyles,aiStyle } from "@/lib/helper";
-import { FilterX, Loader, RefreshCcw, SaveAllIcon } from "lucide-react";
-import { ChangeEvent,  useState } from "react";
+import { roomStyles, aiStyle } from "@/lib/helper";
+import { FilterX, Loader, RefreshCcw, Share2Icon } from "lucide-react";
+import { ChangeEvent, useState } from "react";
 import { toast } from "sonner";
 import { generateFromHuggingFaceModel } from "@/actions/generate-from-hugginface";
- 
+
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -32,22 +32,21 @@ const Client = ({ user }: clientProps) => {
   const [uploadImage, setUploadImage] = useState<string | null>(null);
   const [outputImage, setOutputImage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  // const [progress, setProgress] = useState<number>(0);
+  const [savedDesignId, setSavedDesignId] = useState<string | null>(null); // track the auto-saved record
 
+  
   const router = useRouter();
 
   //_______( Function to set room type )_________
-
   const handleRoomChange = (value: string) => {
-    console.log("Room value", value);
-
     setRoom(value);
   };
+
   //____________( Function to set AI style type )_________
   const handleAistyle = (value: string) => {
-    console.log("AI Room value", value);
     setAistyle(value);
   };
+
   //_________( Function to handle the prompt)
   const handlePrompt = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setPrompt(e.target.value);
@@ -56,6 +55,7 @@ const Client = ({ user }: clientProps) => {
   const handleRoomReset = () => {
     setRoom(null);
   };
+
   const handleAistyleReset = () => {
     setAistyle(null);
   };
@@ -73,6 +73,7 @@ const Client = ({ user }: clientProps) => {
     setUploadImage(null);
     setOutputImage(null);
     setIsSaving(false);
+    setSavedDesignId(null);
   };
 
   const clearAfterSave = () => {
@@ -82,48 +83,50 @@ const Client = ({ user }: clientProps) => {
     setUploadImage(null);
     setOutputImage(null);
     setIsSaving(false);
+    setSavedDesignId(null);
   };
-  //___________( Save result function)
+
+  //___________( Save result function — just marks isSaved: true )___________
   const saveAllResult = async () => {
-    if (!uploadImage && !outputImage) {
+    if (!outputImage) {
       toast.error("Please generate an image before saving");
+      return;
+    }
+
+    if (!savedDesignId) {
+      toast.error("No generated design found to save");
+      return;
     }
 
     try {
       setIsSaving(true);
-      const response = await axios.post("/api/result", {
-        uploadImage,
-        outputImage,
-        prompt,
-        roomStyle: room ?? "default",
-        aiStyle: aistyle ?? "default",
-        userName: user.fullName ?? "Unknow User",
-        userImage: user.imageUrl ?? "assets/img/avatar.jpg",
+
+      const response = await axios.patch(`/api/result/${savedDesignId}`, {
+        isSaved: true,
       });
 
       if (response.data.success) {
-        toast.success("Result save successfully");
+        toast.success("Shared successfully with the public.");
         router.refresh();
         clearAfterSave();
       } else {
         toast.error("Something went wrong. Could not save");
       }
     } catch (error) {
-      console.error("Faild to save result", error);
-      toast.error("Faild to save result!");
+      console.error("Failed to share with public", error);
+      toast.error("Failed to sahre it with public!");
     } finally {
       setIsSaving(false);
     }
   };
-  //___________( Handle Generate function )___________
-  const handleGenerate = async () => {
-    console.log("handle generate is hitting...");
-    console.log("upload image:", uploadImage);
 
+  //___________( Handle Generate function — auto-saves with isSaved: false )___________
+  const handleGenerate = async () => {
     if (!uploadImage) return;
 
     try {
       setLoading(true);
+      setSavedDesignId(null); // reset any previous saved id
 
       const result = await generateFromHuggingFaceModel({
         imageUrl: uploadImage,
@@ -132,26 +135,67 @@ const Client = ({ user }: clientProps) => {
         }.Make sure the image is high quality (720px) and make sure the ratio is 16:9 and visually appealing. }`,
       });
 
-      setOutputImage(result);
+    
+    // step 1: Fetch the temp HuggingFace image as a blob
+    const hfResponse = await fetch(result);
+
+    const blob = await hfResponse.blob();
+
+    // Step 2: Upload it to your S3 via existing endpoint
+    const formData = new FormData();
+    formData.append("file", new File([blob], `output-${Date.now()}.webp`, { type: blob.type }));
+
+    const s3Response = await fetch("/api/s3-upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const s3Data = await s3Response.json();
+
+    if (!s3Data.success) {
+      toast.error("Failed to save output image");
+      return;
+    }
+
+    const permanentUrl = s3Data.url; // permanent S3 URL
+
+    setOutputImage(permanentUrl);
+
+      // Auto-save with isSaved: false
+      const response = await axios.post("/api/result", {
+        uploadImage,
+        outputImage: result,
+        prompt,
+        roomStyle: room ?? "default",
+        aiStyle: aistyle ?? "default",
+        userName: user.fullName ?? "Unknown User",
+        userImage: user.imageUrl ?? "assets/img/avatar.jpg",
+        isSaved: false,
+      });
+
+      if (response.data.success) {
+        setSavedDesignId(response.data.id); // store the record id for later
+      } else {
+        toast.error("Design generated but could not be auto-saved");
+      }
     } catch (error) {
-      toast.error("Faild to generate the room design!");
+      toast.error("Failed to generate the room design!");
     } finally {
       setLoading(false);
     }
   };
-  const handleChangeImage = (url: string) => {
-    console.log("file,", url);
 
+  const handleChangeImage = (url: string) => {
     setUploadImage(url);
   };
+
   const handleRemoveImage = () => {
     setUploadImage(null);
   };
 
-
   return (
     <div className="my-10 w-full p-4 rounded-md border border-input">
-      <div className=" w-full grid grid-cols-1 min-md:grid-cols-3 gap-3">
+      <div className="w-full grid grid-cols-1 min-md:grid-cols-3 gap-3">
         <div className="w-full space-y-4 col-span-1 p-10 border border-input rounded-md">
           <CustomSelect
             placeholder="Select your interior"
@@ -183,11 +227,11 @@ const Client = ({ user }: clientProps) => {
               icon={<FilterX className="min-w-4 min-h-4" />}
             />
             <ToolTipButton
-              content="save the result"
+              content="Share it with public"
               onClick={saveAllResult}
-              disable={loading}
-              loading = {isSaving}
-              icon={<SaveAllIcon className="min-w-4 min-h-4" />}
+              disable={loading || !savedDesignId} // disable if nothing generated yet
+              loading={isSaving}
+              icon={<Share2Icon className="min-w-4 min-h-4" />}
             />
           </div>
           <ToolTipButton
@@ -203,7 +247,7 @@ const Client = ({ user }: clientProps) => {
           />
         </div>
       </div>
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2  md:grid-cols-2 gap-6 mt-5">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6 mt-5">
         <ImageUploader
           location="clients"
           onChange={handleChangeImage}
@@ -211,17 +255,17 @@ const Client = ({ user }: clientProps) => {
           value={uploadImage}
           disable={loading}
         />
-        <div className="w-full  aspect-video relative rounded-md border border-input bg-muted  dark:bg-muted/50">
+        <div className="w-full aspect-video relative rounded-md border border-input bg-muted dark:bg-muted/50">
           {loading && !outputImage && (
-            <div className="w-full h-full  flex flex-col gap-2 items-center justify-center">
-              <div className="flex items-center justify-center gap-1 ">
+            <div className="w-full h-full flex flex-col gap-2 items-center justify-center">
+              <div className="flex items-center justify-center gap-1">
                 <Loader className="w-5 h-5 animate-spin text-orange-500" />
                 <span className="text-sm mt-1 block text-center animate-pulse font-medium">
                   Generating...
                 </span>
               </div>
               <div className="px-8 text-gray-400">
-                <span className="text-sm ">
+                <span className="text-sm">
                   Please wait a moment. We&apos;re using free AI models, so it
                   might take a couple of minutes. Don&apos;t close this tab.
                 </span>

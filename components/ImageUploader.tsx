@@ -65,7 +65,7 @@ const ImageUploader = ({
         throw new Error(data.error || "Failed to delete image");
       }
 
-      toast.success("Image deleted from S3");
+      toast.success("Image deleted ");
       onChange(""); // Clear image
     } catch (error) {
       toast.error("Failed to delete image");
@@ -91,7 +91,7 @@ const ImageUploader = ({
           if (xhr.status === 200) {
             const res = JSON.parse(xhr.responseText);
             if (res.success) {
-              toast.success("Image uploaded successfully on S3");
+              toast.success("Image uploaded successfully");
               onChange(res.url);
             } else {
               toast.error("Upload failed");

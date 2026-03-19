@@ -24,14 +24,15 @@ const  DashboardPage = async () => {
    }
 
    //__________( fetch all data)___________
-   const designs = await fetchAllDesignById(user.id)
- 
+   const designs = await fetchAllDesignById(user.id);
+    
+    
   return (
       <Container className="p-4  ">
         <CustumBreadCrump breadCrumbPage="Overview" breadCrumbitems={[{label : "Dashboard", link: "/dashboard"}]} />
 
         <Client user={loggedInUser} />
-        <Designs isDesigingPage={false} designs={designs} userId = {userId} />
+        <Designs isDesigingPage={true} designs={designs} userId = {userId} />
      </Container>
   )
 }

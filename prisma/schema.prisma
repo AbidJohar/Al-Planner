@@ -26,6 +26,7 @@ model GenerateRoom {
   userId String
   userName String
   userImage String?
-  
+
+  isSaved Boolean @default(false)
   createdAt DateTime @default(now())
 }

@@ -15,8 +15,8 @@ export const NavRoutes : NavlinkProps[] =  [
         protected : true
     },
     {
-        label : "Designs",
-        link :  "/designs"
+        label : "Explore Designs",
+        link :  "/explore-designs"
     },
     {
         label : "Contact",

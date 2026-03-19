@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { fetchAllDesignById } from "@/actions/get-all-generatedDesigns-byuserId";
+import { fetchAllPublicDesigns } from "@/actions/get-all-generatedDesigns"; // use public fetch
 import Container from "@/components/Container";
 import Designs from "@/components/Designs";
 import { auth } from "@clerk/nextjs/server";
@@ -24,25 +24,29 @@ const DesignWrapper = async ({
   date,
   userId,
 }: designWrapperProps) => {
-  const designs = await fetchAllDesignById(null, popularity, date);
+  const designs = await fetchAllPublicDesigns(popularity, date); // ✅ public fetch
 
-  return <Designs designs={designs} isDesigingPage userId={userId} />;
+  return (
+    <Designs
+      designs={designs}
+      isDesigingPage={false} // ✅ public page — no delete, show likes & favorites
+      userId={userId}
+    />
+  );
 };
 
 const DesignSkeleton = () => {
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({length : 6}).map((_,index)=> (
-
-    <div key={index} className="flex flex-col space-y-3">
-      <Skeleton className="h-[125px] w-full rounded-xl" />
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-[200px]" />
-      </div>
-    </div>
-
-        ))}
+      {Array.from({ length: 6 }).map((_, index) => (
+        <div key={index} className="flex flex-col space-y-3">
+          <Skeleton className="h-[125px] w-full rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
@@ -57,7 +61,7 @@ export default async function DesignPage({ searchParams }: designPageProps) {
   return (
     <section>
       <Container className="p-4 md:p-8 space-y-8">
-        <FilterControl/>
+        <FilterControl />
         <Suspense key={popularity} fallback={<DesignSkeleton />}>
           <DesignWrapper popularity={popularity} date={date} userId={userId} />
         </Suspense>

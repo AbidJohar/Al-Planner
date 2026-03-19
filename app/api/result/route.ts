@@ -26,7 +26,7 @@ export const POST = async (req: NextRequest) => {
       userImage,
     } = body;
 
-    console.log("aiStyle",aiStyle);
+    // console.log("aiStyle",aiStyle);
     
     const saveResult = await db.generateRoom.create({
       data: {
