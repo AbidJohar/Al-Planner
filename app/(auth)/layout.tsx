@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (

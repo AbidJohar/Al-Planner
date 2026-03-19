@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { fetchAllPublicDesigns } from "@/actions/get-all-generatedDesigns"; // use public fetch
 import Container from "@/components/Container";
 import Designs from "@/components/Designs";
 import { auth } from "@clerk/nextjs/server";
@@ -24,13 +23,26 @@ const DesignWrapper = async ({
   date,
   userId,
 }: designWrapperProps) => {
-  const designs = await fetchAllPublicDesigns(popularity, date); // public fetch
+  // fetch first page on the server
+  const params = new URLSearchParams();
+  if (popularity) params.set("popularity", popularity);
+  if (date) params.set("date", date);
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_APP_URL}/api/designs/public?${params.toString()}`,
+    { cache: "no-store" }
+  );
+  const { designs, nextCursor, hasMore } = await res.json();
 
   return (
     <Designs
-      designs={designs}
-      isDesigingPage={false} // public page — no delete, show likes & favorites
+      initialDesigns={designs}
+      initialCursor={nextCursor}
+      initialHasMore={hasMore}
+      isDesigingPage={false}
       userId={userId}
+      popularity={popularity}
+      date={date}
     />
   );
 };
@@ -55,14 +67,13 @@ export default async function DesignPage({ searchParams }: designPageProps) {
   const resolvedParams = await searchParams;
   const popularity = resolvedParams?.popularity;
   const date = resolvedParams?.date;
-
   const { userId } = await auth();
 
   return (
     <section>
       <Container className="p-4 md:p-8 space-y-8">
         <FilterControl />
-        <Suspense key={popularity} fallback={<DesignSkeleton />}>
+        <Suspense key={`${popularity}-${date}`} fallback={<DesignSkeleton />}>
           <DesignWrapper popularity={popularity} date={date} userId={userId} />
         </Suspense>
       </Container>
