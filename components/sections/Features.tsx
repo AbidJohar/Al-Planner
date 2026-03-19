@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
-import  Container  from "@/components/Container";
+import Container from "@/components/Container";
 import {
   DotLottieCommonPlayer,
   DotLottiePlayer,
@@ -68,12 +68,16 @@ export const Features = () => {
             <FeatureTab key={tab.title} {...tab} />
           ))}
         </div>
-
         <div className="border border-white/20 p-2.5 rounded-xl mt-8">
-          <div
-            className="aspect-video bg-cover bg-no-repeat bg-center border border-white/20 rounded-lg"
-            style={{ backgroundImage: "url(/assets/img/features.jpg)" }}
-          ></div>
+          <div className="aspect-video border border-white/50 rounded-lg overflow-hidden relative">
+            <Image
+              src="/assets/img/features.jpg"
+              alt="Features preview"
+              fill
+              className="object-cover"     
+              sizes="(max-width: 768px) 100vw, 1200px"
+            />
+          </div>
         </div>
       </Container>
     </section>
@@ -136,7 +140,7 @@ const FeatureTab = (tab: TabsProps) => {
           ref={dotLottieRef}
           src={tab.icon}
           className="h-5 w-5"
-            autoplay
+          autoplay
         />
       </div>
       <div className="font-medium">{tab.title}</div>

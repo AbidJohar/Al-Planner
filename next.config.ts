@@ -4,10 +4,14 @@ const nextConfig: NextConfig = {
   /* config options here */
   images : {
     remotePatterns :[
-      {
-        protocol: 'https',
-        hostname : "ai-planner-designer.s3.us-east-1.amazonaws.com"
-      },
+       {
+        protocol: "https",
+        hostname: "*.s3.*.amazonaws.com",  
+       },
+       {
+        protocol: "http",
+        hostname: "*.s3.*.amazonaws.com",  
+       },
       {hostname: "img.clerk.com"}
     ]
   },

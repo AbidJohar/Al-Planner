@@ -20,7 +20,7 @@ export default function FilterControl() {
 
   const handleChange = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-         console.log("params:",params);
+        //  console.log("params:",params);
          
     if (value) {
       params.set(key, value);

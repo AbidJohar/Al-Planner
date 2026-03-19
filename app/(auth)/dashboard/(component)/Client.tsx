@@ -164,7 +164,7 @@ const Client = ({ user }: clientProps) => {
       // Auto-save with isSaved: false
       const response = await axios.post("/api/result", {
         uploadImage,
-        outputImage: result,
+        outputImage: permanentUrl,
         prompt,
         roomStyle: room ?? "default",
         aiStyle: aistyle ?? "default",
@@ -275,6 +275,7 @@ const Client = ({ user }: clientProps) => {
 
           {outputImage && (
             <ReactBeforeSliderComponent
+             key={`${outputImage}`}
               firstImage={{
                 imageUrl: uploadImage || "https://placehold.co/600x400",
               }}

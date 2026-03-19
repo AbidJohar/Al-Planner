@@ -24,12 +24,12 @@ const DesignWrapper = async ({
   date,
   userId,
 }: designWrapperProps) => {
-  const designs = await fetchAllPublicDesigns(popularity, date); // ✅ public fetch
+  const designs = await fetchAllPublicDesigns(popularity, date); // public fetch
 
   return (
     <Designs
       designs={designs}
-      isDesigingPage={false} // ✅ public page — no delete, show likes & favorites
+      isDesigingPage={false} // public page — no delete, show likes & favorites
       userId={userId}
     />
   );

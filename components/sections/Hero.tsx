@@ -96,7 +96,7 @@ export const Hero = ({ isAuthenticated, userId }: HeroProps) => {
         </p>
         <div className="flex justify-center mt-3">
           <Link  href={isAuthenticated ? "/dashboard" : "/sign-in"}>
-          <button className="py-2 px-3 rounded-full font-semibold text-black shadow-lg shadow-black/50 bg-white bg-[radial-gradient(100%_100%_at_top_left,white,white,rgba(74,32,138,.5))]">
+          <button className="py-2 px-3 rounded-full cursor-pointer font-semibold text-black shadow-lg shadow-black/50 bg-white bg-[radial-gradient(100%_100%_at_top_left,white,white,rgba(74,32,138,.5))]">
              Generate Room
 
           </button>

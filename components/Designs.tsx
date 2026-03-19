@@ -28,6 +28,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import BeforeAfterSlider from "./BeforeAfterSlider";
 
 //Lazy load (performance boost)
 const ReactBeforeSliderComponent = dynamic(
@@ -172,16 +173,14 @@ const DesignCard = ({
       )}
 
       {/* Image Slider */}
-      <div className="w-full aspect-square rounded-md overflow-hidden">
-        <ReactBeforeSliderComponent
-          firstImage={{
-            imageUrl: design?.updateImage || "https://placehold.co/600x400",
-          }}
-          secondImage={{
-            imageUrl: design?.outputImage || "https://placehold.co/600x400",
-          }}
-        />
-      </div>
+     
+      {/* Image Slider */}
+<div className="w-full aspect-square rounded-md overflow-hidden relative">
+  <BeforeAfterSlider
+    beforeUrl={design?.updateImage}
+    afterUrl={design?.outputImage}
+  />
+</div>
 
       {/* Prompt */}
       <HoverCard openDelay={0} closeDelay={100}>
