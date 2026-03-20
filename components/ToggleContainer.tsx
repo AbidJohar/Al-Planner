@@ -9,16 +9,23 @@ import {
 import { Menu } from "lucide-react";
 import NavMenu from "./NavMenu";
 import GenerateButton from "./GenerateButton";
+import { useState } from "react";
 
 interface toggleContainerProps {
   isAuthenticated?: boolean;
 }
 
+
 export default function ToggleContainer({
   isAuthenticated,
 }: toggleContainerProps) {
+  
+     const [open, setOpen] = useState<boolean>(false)
+
+
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>
         <Menu className="min-md:hidden" />
       </SheetTrigger>
@@ -26,7 +33,7 @@ export default function ToggleContainer({
         <SheetHeader>
           <SheetTitle></SheetTitle>
           <div className=" p-6 space-y-7">
-           <NavMenu isMobile />
+           <NavMenu isMobile onNavClick = {()=> setOpen(false)} />
            <GenerateButton label="Generate" />
           </div>
         </SheetHeader>

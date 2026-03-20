@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 interface NavMenuProps {
-    isMobile? : boolean
+    isMobile? : boolean,
+    onNavClick? : ()=> void;
 }
 
-export default function NavMenu({isMobile}: NavMenuProps){
+export default function NavMenu({isMobile, onNavClick}: NavMenuProps){
  
     const {isSignedIn} = useAuth();
 
@@ -24,7 +25,13 @@ export default function NavMenu({isMobile}: NavMenuProps){
                 const isActive = route.link === "/" ? pathname === "/" : pathname.startsWith(route.link)
 
                 return(
-                     <Link className={cn("text-white/60 hover:text-white transition", isActive && "font-semibold text-white")} key={route.link} href={route.link}>{route.label}</Link>
+                     <Link className={cn("text-white/60 hover:text-white transition", isActive && "font-semibold text-white")} 
+                     key={route.link} 
+                     onClick={onNavClick}
+                     href={route.link}>
+
+                        {route.label}
+                        </Link>
                 )
             })
           }
