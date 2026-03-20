@@ -32,7 +32,7 @@ export default function FilterControl() {
   };
 
   return (
-    <div className="w-full flex flex-col items-start gap-4 md:gap-2 md:flex-row md:items-center md:justify-between">
+    <div className="w-full flex flex-row items-start gap-4 md:gap-2 md:flex-row md:items-center md:justify-between">
 
       {/* Popularity Filter */}
       <Select
